@@ -6,7 +6,12 @@ module TiltJade
       require 'sprockets'
       require 'sprockets/engines'
       require "tilt-jade/template"
-      app.assets.register_engine '.jade', ::TiltJade::Template
+      if app.assets
+        app.assets.register_engine '.jade', ::TiltJade::Template
+      else
+        # Rails 3.1.0rc
+        Sprockets.register_engine '.jade', ::TiltJade::Template
+      end
     end
   end
 end
