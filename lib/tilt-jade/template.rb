@@ -18,13 +18,10 @@ module TiltJade
     def prepare
     end
 
-    # def evaluate(scope, locals, &block)
-    #   "alert(#{data.inspect});"
-    # end
-    
     def evaluate(scope, locals, &block)
       options[:locals] = locals
       options[:client] = true
+      options[:compileDebug] = false
       options[:filename] = basename
       
       JadeJs.compile(data, options)
