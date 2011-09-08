@@ -22,7 +22,7 @@ module TiltJade
       options[:locals] = locals
       options[:client] = true
       options[:compileDebug] = false
-      options[:filename] = pathname
+      options[:filename] = file
       
       JadeJs.compile(data, options)
     end
