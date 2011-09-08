@@ -40,6 +40,9 @@ hello.js (what sprockets will output):
       };
     }).call(this);
 
-Using the JST in your javascript:
-
+Using the JST in your application.js (note it requires the jade
+runtime.js before anything else):
+  
+    //= require tilt-jade/runtime
+    //= require hello
     $('body').html(JST['hello']({sayHelloTo: 'World'}))
