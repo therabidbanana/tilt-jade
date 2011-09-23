@@ -1,3 +1,5 @@
+module Rails; class Engine; end; end
+
 module TiltJade
   class Engine < Rails::Engine
     initializer "tilt_jade.configure_rails_initialization" do |app|

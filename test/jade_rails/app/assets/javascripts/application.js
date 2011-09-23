@@ -13,6 +13,6 @@
 //
 
 jQuery(function($){
-  $('body').html(window.JST['templates/hello']({sayHello: 'world'}))
+  $('body').html(JST['templates/hello']({sayHello: 'world'}))
 })
 
