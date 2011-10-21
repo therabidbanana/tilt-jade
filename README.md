@@ -46,8 +46,16 @@ runtime.js before anything else):
     //= require tilt-jade/runtime
     //= require hello
     $('body').html(JST['hello']({sayHelloTo: 'World'}))
-    
-    License
+
+
+Limitations
+============
+
+Includes don't work with this implementation. A workaround is to use something like `= JST['include/foo']()`
+
+
+License
+=======
 
 (The MIT License)
 
