@@ -12,7 +12,7 @@ var jade = (function(exports){
 
 if (!Array.isArray) {
   Array.isArray = function(arr){
-    return '[object Array]' == toString.call(arr);
+    return '[object Array]' == Object.prototype.toString.call(arr);
   };
 }
 
@@ -25,11 +25,11 @@ if (!Object.keys) {
     var arr = [];
     for (var key in obj) {
       if (obj.hasOwnProperty(key)) {
-        arr.push(obj);
+        arr.push(key);
       }
     }
     return arr;
-  } 
+  }
 }
 
 /**
@@ -85,20 +85,22 @@ exports.escape = function escape(html){
 
 /**
  * Re-throw the given `err` in context to the
- * `str` of jade, `filename`, and `lineno`.
+ * the jade in `filename` at the given `lineno`.
  *
  * @param {Error} err
- * @param {String} str
  * @param {String} filename
  * @param {String} lineno
  * @api private
  */
 
-exports.rethrow = function rethrow(err, str, filename, lineno){
+exports.rethrow = function rethrow(err, filename, lineno){
+  if (!filename) throw err;
+
   var context = 3
+    , str = require('fs').readFileSync(filename, 'utf8')
     , lines = str.split('\n')
     , start = Math.max(lineno - context, 0)
-    , end = Math.min(lines.length, lineno + context); 
+    , end = Math.min(lines.length, lineno + context);
 
   // Error context
   var context = lines.slice(start, end).map(function(line, i){
@@ -111,7 +113,7 @@ exports.rethrow = function rethrow(err, str, filename, lineno){
 
   // Alter exception message
   err.path = filename;
-  err.message = (filename || 'Jade') + ':' + lineno 
+  err.message = (filename || 'Jade') + ':' + lineno
     + '\n' + context + '\n\n' + err.message;
   throw err;
 };
@@ -119,4 +121,3 @@ exports.rethrow = function rethrow(err, str, filename, lineno){
   return exports;
 
 })({});
-
