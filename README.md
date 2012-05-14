@@ -8,6 +8,16 @@ works).
 Probably best combined with the jst engine for attaching the compiled
 function to the window. 
 
+
+Limitations
+============
+
+Includes don't work with this implementation (since the point is to let you execute includes client side). 
+A workaround is to use something like `= JST['include/foo']()`
+
+What You Get
+============
+
 hello.js.jst.jade:
 
     h1 Hello #{sayHelloTo}!
@@ -48,10 +58,6 @@ runtime.js before anything else):
     $('body').html(JST['hello']({sayHelloTo: 'World'}))
 
 
-Limitations
-============
-
-Includes don't work with this implementation. A workaround is to use something like `= JST['include/foo']()`
 
 
 License
