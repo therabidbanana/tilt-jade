@@ -65,7 +65,10 @@ module JadeJs
       #   options[:bare] = false
       # end
 
+
       Source.context.eval("jade.compile(#{script.to_json}, #{options.to_json}).toString()")
+    rescue ExecJS::ProgramError => e
+      %(console.warn("Error compiling tilt template: #{options[:filename]}"))
     end
   end
 end
