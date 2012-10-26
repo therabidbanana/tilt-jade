@@ -68,7 +68,7 @@ module JadeJs
 
       Source.context.eval("jade.compile(#{script.to_json}, #{options.to_json}).toString()")
     rescue ExecJS::ProgramError => e
-      raise %(Error compiling tilt template: #{options[:filename]})
+      raise %(Error compiling tilt-jade template '#{options[:filename]}': #{e.message})
     end
   end
 end
