@@ -1,5 +1,5 @@
 
-var jade = (function(exports){
+jade = (function(exports){
 /*!
  * Jade - runtime
  * Copyright(c) 2010 TJ Holowaychuk <tj@vision-media.ca>
@@ -33,37 +33,93 @@ if (!Object.keys) {
 }
 
 /**
+ * Merge two attribute objects giving precedence
+ * to values in object `b`. Classes are special-cased
+ * allowing for arrays and merging/joining appropriately
+ * resulting in a string.
+ *
+ * @param {Object} a
+ * @param {Object} b
+ * @return {Object} a
+ * @api private
+ */
+
+exports.merge = function merge(a, b) {
+  var ac = a['class'];
+  var bc = b['class'];
+
+  if (ac || bc) {
+    ac = ac || [];
+    bc = bc || [];
+    if (!Array.isArray(ac)) ac = [ac];
+    if (!Array.isArray(bc)) bc = [bc];
+    ac = ac.filter(nulls);
+    bc = bc.filter(nulls);
+    a['class'] = ac.concat(bc).join(' ');
+  }
+
+  for (var key in b) {
+    if (key != 'class') {
+      a[key] = b[key];
+    }
+  }
+
+  return a;
+};
+
+/**
+ * Filter null `val`s.
+ *
+ * @param {Mixed} val
+ * @return {Mixed}
+ * @api private
+ */
+
+function nulls(val) {
+  return val != null;
+}
+
+/**
  * Render the given attributes object.
  *
  * @param {Object} obj
+ * @param {Object} escaped
  * @return {String}
  * @api private
  */
 
-exports.attrs = function attrs(obj){
+exports.attrs = function attrs(obj, escaped){
   var buf = []
     , terse = obj.terse;
+
   delete obj.terse;
   var keys = Object.keys(obj)
     , len = keys.length;
+
   if (len) {
     buf.push('');
     for (var i = 0; i < len; ++i) {
       var key = keys[i]
         , val = obj[key];
+
       if ('boolean' == typeof val || null == val) {
         if (val) {
           terse
             ? buf.push(key)
             : buf.push(key + '="' + key + '"');
         }
+      } else if (0 == key.indexOf('data') && 'string' != typeof val) {
+        buf.push(key + "='" + JSON.stringify(val) + "'");
       } else if ('class' == key && Array.isArray(val)) {
         buf.push(key + '="' + exports.escape(val.join(' ')) + '"');
-      } else {
+      } else if (escaped && escaped[key]) {
         buf.push(key + '="' + exports.escape(val) + '"');
+      } else {
+        buf.push(key + '="' + val + '"');
       }
     }
   }
+
   return buf.join(' ');
 };
 
@@ -77,7 +133,7 @@ exports.attrs = function attrs(obj){
 
 exports.escape = function escape(html){
   return String(html)
-    .replace(/&(?!\w+;)/g, '&amp;')
+    .replace(/&(?!(\w+|\#\d+);)/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
@@ -93,11 +149,13 @@ exports.escape = function escape(html){
  * @api private
  */
 
-exports.rethrow = function rethrow(err, filename, lineno){
-  if (!filename) throw err;
+exports.rethrow = function rethrow(err, filename, lineno, str){
+  if (!str) {
+    if (!filename) throw err;
+    str = require('fs').readFileSync(filename, 'utf8')
+  }
 
   var context = 3
-    , str = require('fs').readFileSync(filename, 'utf8')
     , lines = str.split('\n')
     , start = Math.max(lineno - context, 0)
     , end = Math.min(lines.length, lineno + context);

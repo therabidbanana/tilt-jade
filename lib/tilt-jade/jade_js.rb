@@ -1,5 +1,5 @@
 require 'execjs'
-require 'jade_js/source'
+require 'tilt-jade/source'
 
 module JadeJs
   EngineError      = ExecJS::RuntimeError
