@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.description = %q{Jade is a high performance template engine heavily influenced by Haml and implemented with JavaScript for node.}
 
   s.rubyforge_project = "tilt-jade"
-  s.add_dependency 'jade-js-source'
+  s.add_dependency 'jade-js-source', '> 0.27.0'
   s.add_dependency 'execjs'
   s.add_dependency 'tilt'
   s.add_dependency 'sprockets'

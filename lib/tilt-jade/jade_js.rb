@@ -27,7 +27,7 @@ module JadeJs
     end
 
     def self.contents
-      @contents ||= File.read(path) + '; var jade = require("jade");'
+      @contents ||= 'var window = {}; ' + File.read(path) + '; var jade = window.jade;'
     end
 
     # def self.version
