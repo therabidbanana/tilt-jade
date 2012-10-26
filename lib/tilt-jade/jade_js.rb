@@ -1,5 +1,5 @@
 require 'execjs'
-require 'jade_js/source'
+require 'source'
 
 module JadeJs
   EngineError      = ExecJS::RuntimeError
