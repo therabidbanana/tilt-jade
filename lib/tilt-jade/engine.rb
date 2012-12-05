@@ -1,7 +1,7 @@
 if defined?(Rails)
   module TiltJade
     class Engine < Rails::Engine
-      initializer "tilt_jade.configure_rails_initialization" do |app|
+      initializer "tilt_jade.configure_rails_initialization", :after => "sprockets.environment", :group => :all do |app|
         next unless app.config.assets.enabled
 
         require 'sprockets'
