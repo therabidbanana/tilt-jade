@@ -1,18 +1,10 @@
 if defined?(Rails)
   module TiltJade
     class Engine < Rails::Engine
-      initializer "tilt_jade.configure_rails_initialization", :after => "sprockets.environment", :group => :all do |app|
-        next unless app.config.assets.enabled
-
-        require 'sprockets'
+      config.before_initialize do |app|
         require 'sprockets/engines'
         require "tilt-jade/template"
-        if app.assets
-          app.assets.register_engine '.jade', ::TiltJade::Template
-        else
-          # Rails 3.1.0rc
-          Sprockets.register_engine '.jade', ::TiltJade::Template
-        end
+        Sprockets.register_engine '.jade', ::TiltJade::Template
       end
     end
   end
